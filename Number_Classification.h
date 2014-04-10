@@ -4,16 +4,20 @@
 #include <vector>
 #include <string>
 #include "Fraction.h"
+#include "Sqrt.h"
 
 using namespace std;
 class Number_Classification{
 	public:
-		void enterExpression();
+		void enterExpression(char z);
 		bool shunting_Yard();
 		bool classify();
 		bool is_number(const std::string& s);
 		bool is_function(const std::string& s);
 		bool is_operator(const std::string& s);
+		bool is_sqrt(const std::string& s);
+		bool is_rt(const std::string& s);
+		bool is_log(const std::string& s);
 		bool is_left(char op);
 		int precedence(string s);
 		void evalulate();
@@ -26,11 +30,13 @@ class Number_Classification{
 		string subtract(stack<string>&stack);
 		string exponent(stack<string>&stack);
 		string multiply(stack<string>&stack);
+		void replace_all(string& input, string& find, string& rep);
+		string getPrevExp(int a);
 	private:
 		string expression;
 		vector<string> expToken;
 		vector<string> prevExpressions;
-		//vector<Fraction> intTokens;
 		queue<string> numbers;
 		stack<string> operators;
+		bool frac_float;
 };

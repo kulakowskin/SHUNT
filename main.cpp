@@ -2,9 +2,9 @@
 #include <iostream>
 using namespace std;
 int main(){
-	while(true){
-		Menu* menu = new Menu();
-		menu->printMenu_basic();
+	Menu* menu = new Menu();
+	menu->printMenu_basic();
+	while(true){		
 		if(menu->printMenu() == false){
 			return 0;
 		}	

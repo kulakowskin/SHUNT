@@ -7,9 +7,15 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <exception>
 #include "Number_Classification.h"
+
+#define PI 3.141592653589793
+#define e 2.71828182846
+
 using namespace std;
-void Number_Classification::enterExpression(){
+void Number_Classification::enterExpression(char z){
+	z == 'y' || z == 'Y' ? this->frac_float = 1 : this->frac_float = 0;
 	cout << "Enter Expression: " << endl;
 	getline(cin, this->expression);
 	this->exptoToken(); 
@@ -61,7 +67,29 @@ bool Number_Classification::is_function(const std::string& s){
 	}
 	return false;
 }
+string Number_Classification::getPrevExp(int a){
+	if( a > this->prevExpressions.size()){
+		return "Does not exist";
+	}
+	return this->prevExpressions.at(this->prevExpressions.size() - a);
+}
+void Number_Classification::replace_all(string& input, string& find, string& rep){
+	size_t p = 0;
+	while((p = input.find(find,p)) != std::string::npos){
+		input.replace(p, find.length(), rep);
+		p += rep.length();
+	}
+}
 void Number_Classification::exptoToken(){
+	if(this->expression.find("ans") != std::string::npos && this->prevExpressions.size() == 0){
+		cout << "\nNo Previous Answer(s). Re-enter an expression.\n" << endl;
+		this->enterExpression('y');
+		return;
+	}
+	if(this->expression.find("ans") != std::string::npos && this->prevExpressions.size() != 0){
+		string ans = "ans";
+		replace_all(this->expression, ans, this->prevExpressions.back());
+	}
 	stringstream p(this->expression);
 	string t;
 	char* q;
@@ -83,11 +111,13 @@ bool Number_Classification::is_left(char op){
 }
 void Number_Classification::evalulate(){
 	stack<string> eval;
+	stack<float> decimal_eval;
     while(!numbers.empty()){
         string o = numbers.front();
 		numbers.pop();
 		if(is_number(o)){
 			eval.push(o);
+			decimal_eval.push(atof(o.c_str()));
 		}
 		else if(is_function(o)){
 			//string numb = eval.top();
@@ -96,6 +126,11 @@ void Number_Classification::evalulate(){
 			//eval.push(result);
 		}
 		else{
+			float t1 = decimal_eval.top();
+			decimal_eval.pop();
+			float t2 = decimal_eval.top();
+			decimal_eval.pop();
+			decimal_eval.push(operate(t2,t1, o[0]));
 			switch(o[0]){
 				case '*':
 					multiply(eval);
@@ -115,7 +150,23 @@ void Number_Classification::evalulate(){
 			}
     	}
     }
-    cout << "\n" << eval.top() << "\n\n" << endl;
+    if(this->frac_float == 1){
+    	cout << "\n" << eval.top() << " - Fractional\n" << endl;
+    }
+    if(this->frac_float == 0){
+    	cout << "\n" << decimal_eval.top() << " - Float Representation\n" << endl;
+    }
+    prevExpressions.push_back("( "+eval.top()+" )");
+    while(!eval.empty()){
+    	eval.pop();
+    }
+    while(!decimal_eval.empty()){
+    	decimal_eval.pop();
+    }
+    while(!numbers.empty()){
+    	numbers.pop();
+    }
+    expToken.clear();
 }
 string Number_Classification::multiply(stack<string>& stack){
 	Fraction t1(stack.top());
@@ -227,7 +278,7 @@ bool Number_Classification::shunting_Yard(){
 	}
 	while(!this->operators.empty()){
 		if(this->operators.top().compare("(") == 0 || this->operators.top().compare(")") == 0 ){
-			cout << "MisMatched Paranthesis!" << endl;
+			cout << "MisMatched Paranthesis\n" << endl;
 			return false;
 		}
 		this->numbers.push(this->operators.top());

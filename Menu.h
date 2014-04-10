@@ -6,5 +6,6 @@ class Menu:public Number_Classification{
 		void printMenu_basic();
 	private:
 		bool readChoice();
+		char frac_float;
 		std::string userinput;
 };

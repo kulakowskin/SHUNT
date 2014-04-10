@@ -1,18 +1,21 @@
 #include <iostream>
+#include <exception>
 #include "Menu.h"
 using namespace std;
 
 
 bool Menu::printMenu(){
-	cout << "1.) Compute new expression" << endl;
-	cout << "2.) Help" << endl;
-	cout << "3.) Review previous expression and answers" << endl;
-	cout << "4.) Quit" << "\n" << endl;
-	bool choice = this->readChoice();
+	cout << "\t1.) Compute new expression" << endl;
+	cout << "\t2.) Help" << endl;
+	cout << "\t3.) Review previous expression and answers" << endl;
+	cout << "\t4.) Quit" << "\n" << endl;
+	bool choice = this->readChoice();	
 	return choice == true ? true : false;
 }
 void Menu::printMenu_basic(){
-	cout << "Welcome to MathWorks.\n\n\n";
+	cout << "Group 14 - 1\n\tJayson Salkey\n\tXiaoxi Zheng\n\tCam Cooper\n\tKyle Goins\n\tNicole Kulakowski\n\tJessan Cherian.\n\n\n";
+	cout << "Fractional(Y) or Decimal Representation(n)? [Y/n] ";
+	cin >> this->frac_float;
 }
 bool Menu::readChoice(){
 	read:
@@ -29,7 +32,7 @@ bool Menu::readChoice(){
 	   }
 	if(input.compare("1") == 0){
 		//call function to take in user expression
-		this->enterExpression();
+		this->enterExpression(this->frac_float);
 	}
 	else if(input.compare("2") == 0){
 		//enter program dialog mode that details how to specify math operations
@@ -73,9 +76,10 @@ bool Menu::readChoice(){
                 }
 	}
 	else if(input.compare("3") == 0){
-		//Expressions and answers will be stored on a global backup string vector
-		//Also have global vector for answers but in floating point form
-		//Set global previous expression "ans" to n's answer. most recent is "1" then "2" 
+		int a;
+		cout << "\tEnter the number of the previous\n\texpression/answer you would like to receive. " << endl;
+		cin >> a;
+		cout << "\n" << this->getPrevExp(a)<< "\n" << endl;  
 	}
 	else if(input.compare("4") == 0){
 		cout << "Thank you for using this piece of software." << endl;
