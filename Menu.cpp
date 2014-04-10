@@ -90,6 +90,7 @@ bool Menu::readChoice(){
 	}
 	if(input.compare("quit") == 0 || input.compare("Quit") == 0){
 		cout << "Thank you for using this piece of software." << endl;
+		cout << "All your results are saved in a .txt file!" << endl;
 		this->writeFile();
 		return false;
 	}
