@@ -57,8 +57,8 @@ bool Menu::readChoice(){
                 	cout<<"===============================================================================================" <<endl;
                 	cout<<"INPUT EXPECTATIONS: "<<endl;
                         cout<<"1.)Power: "<<endl;
-                        cout<<"\t x to the power of y == x^y"<<endl;
-                        cout<<"\t Example: 2^3\n"<<endl;
+                        cout<<"\t x to the power of y == x ^ y"<<endl;
+                        cout<<"\t Example: 2 ^ 3\n"<<endl;
                         cout<<"2.)Square Roots: "<<endl;
                         cout<<"\t The square root of x == sqrt:x"<<endl ; 
                         cout<<"\t Example: sqrt:5\n"<<endl;
