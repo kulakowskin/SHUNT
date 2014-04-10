@@ -21,7 +21,7 @@ class Number_Classification{
 		bool is_left(char op);
 		int precedence(string s);
 		void evalulate();
-		void exptoToken();
+		void exptoToken(char z);
 		float operate(float num, string func);
 		float operate(float n1, float n2, char z);
 		void operate(vector<string>& stack, char z);
@@ -30,12 +30,15 @@ class Number_Classification{
 		string subtract(stack<string>&stack);
 		string exponent(stack<string>&stack);
 		string multiply(stack<string>&stack);
+		string square_root(stack<string>&stack);
 		void replace_all(string& input, string& find, string& rep);
 		string getPrevExp(int a);
+		void writeFile();
 	private:
 		string expression;
 		vector<string> expToken;
 		vector<string> prevExpressions;
+		vector<string> expressions_b;
 		queue<string> numbers;
 		stack<string> operators;
 		bool frac_float;

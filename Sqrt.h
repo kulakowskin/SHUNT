@@ -8,6 +8,7 @@ class Sqrt{
 		Sqrt(string expression);
 		string simRoots();
 		void parseNumbers();
+		float getIn();
 	private: 
 		int multiplier;    //multiplier
 		int radicand;   //radicand

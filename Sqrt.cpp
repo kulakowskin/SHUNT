@@ -12,6 +12,9 @@ Sqrt::Sqrt(string expression){
 	this->expression = strstr((char*)expression.c_str(),expression.c_str());
 	parseNumbers();
 }
+float Sqrt::getIn(){
+	return this->in;
+}
 string Sqrt::simRoots(){
 	this->factor_c = 0;
 	this->mf = this->in/2;
@@ -28,20 +31,20 @@ string Sqrt::simRoots(){
 			if (this->radicand == 1) {
 				stringstream bb;
 				bb << this->multiplier;
-				return bb.str();
+				return "( " + bb.str() + " )";
 			}
 			else {
 				stringstream ss;
 				ss << this->multiplier;
 				stringstream bb;
 				bb << this->radicand;
-				return ss.str() + "sqrt:" + bb.str();
+				return "( " + ss.str() + " * sqrt:" + bb.str() + " )";
 			}
 		}
         else {
             stringstream ss; 
             ss << this->in;
-            return "sqrt:" + ss.str();
+            return "( sqrt:" + ss.str() + " )";
 		}
 }
 void Sqrt::parseNumbers(){

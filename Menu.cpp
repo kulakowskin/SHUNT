@@ -5,7 +5,7 @@ using namespace std;
 
 
 bool Menu::printMenu(){
-	cout << "\t1.) Compute new expression" << endl;
+	cout << "\n\t1.) Compute new expression" << endl;
 	cout << "\t2.) Help" << endl;
 	cout << "\t3.) Review previous expression and answers" << endl;
 	cout << "\t4.) Quit" << "\n" << endl;
@@ -13,8 +13,8 @@ bool Menu::printMenu(){
 	return choice == true ? true : false;
 }
 void Menu::printMenu_basic(){
-	cout << "Group 14 - 1\n\tJayson Salkey\n\tXiaoxi Zheng\n\tCam Cooper\n\tKyle Goins\n\tNicole Kulakowski\n\tJessan Cherian.\n\n\n";
-	cout << "Fractional(Y) or Decimal Representation(n)? [Y/n] ";
+	cout << "\n\t\t\t\tGroup 14 - 1\n- Jayson Salkey\n- Xiaoxi Zheng\n- Cam Cooper\n- Kyle Goins\n- Nicole Kulakowski\n- Jessan Cherian.\n\n\n";
+	cout << "Fractional/Decimal? [Y/n] ";
 	cin >> this->frac_float;
 }
 bool Menu::readChoice(){
@@ -31,11 +31,9 @@ bool Menu::readChoice(){
 	   	goto read;
 	   }
 	if(input.compare("1") == 0){
-		//call function to take in user expression
 		this->enterExpression(this->frac_float);
 	}
 	else if(input.compare("2") == 0){
-		//enter program dialog mode that details how to specify math operations
 		helpMenu:
                 //enter program dialog mode that details how to specify math operations
                 cout<<"Welcome to the help menu!\n"<<endl;
@@ -83,6 +81,7 @@ bool Menu::readChoice(){
 	}
 	else if(input.compare("4") == 0){
 		cout << "Thank you for using this piece of software." << endl;
+		this->writeFile();
 		return false;
 	}
 	if(input.compare("back") == 0 || input.compare("Back") == 0){
@@ -91,6 +90,7 @@ bool Menu::readChoice(){
 	}
 	if(input.compare("quit") == 0 || input.compare("Quit") == 0){
 		cout << "Thank you for using this piece of software." << endl;
+		this->writeFile();
 		return false;
 	}
 	return true;

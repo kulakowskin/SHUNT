@@ -7,6 +7,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <exception>
 #include "Number_Classification.h"
 
@@ -18,7 +19,7 @@ void Number_Classification::enterExpression(char z){
 	z == 'y' || z == 'Y' ? this->frac_float = 1 : this->frac_float = 0;
 	cout << "Enter Expression: " << endl;
 	getline(cin, this->expression);
-	this->exptoToken(); 
+	this->exptoToken(z); 
 }
 bool Number_Classification::is_number(const std::string& s){
     std::string nu = s;
@@ -67,6 +68,24 @@ bool Number_Classification::is_function(const std::string& s){
 	}
 	return false;
 }
+bool Number_Classification::is_sqrt(const std::string& s){
+	if (s.find("sqrt:") != std::string::npos) {
+		return true;
+	}
+	return false;
+}
+bool Number_Classification::is_log(const std::string& s){
+	if (s.find("log_") != std::string::npos) {
+		return true;
+	}
+	return false;
+}
+bool Number_Classification::is_rt(const std::string& s){
+	if (s.find("rt:") != std::string::npos) {
+		return true;
+	}
+	return false;
+}
 string Number_Classification::getPrevExp(int a){
 	if( a > this->prevExpressions.size()){
 		return "Does not exist";
@@ -80,7 +99,8 @@ void Number_Classification::replace_all(string& input, string& find, string& rep
 		p += rep.length();
 	}
 }
-void Number_Classification::exptoToken(){
+void Number_Classification::exptoToken(char z){
+	shunt:
 	if(this->expression.find("ans") != std::string::npos && this->prevExpressions.size() == 0){
 		cout << "\nNo Previous Answer(s). Re-enter an expression.\n" << endl;
 		this->enterExpression('y');
@@ -95,6 +115,49 @@ void Number_Classification::exptoToken(){
 	char* q;
 	while(getline(p,t,' ')){
 		this->expToken.push_back(t);
+	}
+	bool passed = false;
+	
+	for(int i=0; i < expToken.size(); i++){
+		if(is_function(expToken.at(i))){
+			if(is_sqrt(expToken.at(i))){
+				Sqrt q(expToken.at(i));
+				expToken.at(i) = q.simRoots();
+				passed = true;
+			}
+			/*if(is_log()){
+				
+			}
+			if(is_rt()){
+				
+			}*/
+		}
+		if(expToken.at(i).compare("pi") == 0){
+				expToken.at(i) = "pi";
+				passed = true;
+		}
+		if(expToken.at(i).compare("e") == 0){
+				expToken.at(i) = "e";
+				passed = true;
+		}
+	}
+	if(passed == true && (z == 'Y' || z == 'y')){
+		string t;
+		cout << "\n";
+		for(int i=0; i < expToken.size(); i++){
+			t+=expToken.at(i) + " ";
+		}
+		prevExpressions.push_back("( "+ t +" )");
+		expressions_b.push_back(this->expression);
+		cout << "\n\n";
+		if(!is_function(t) &&  t.find("e") == std::string::npos && t.find("pi") == std::string::npos){
+			this->expression = t;
+			expToken.clear();
+			goto shunt;
+		}
+		cout << t << endl;
+		expToken.clear();
+		return;
 	}
 	this->shunting_Yard();
 }
@@ -112,61 +175,77 @@ bool Number_Classification::is_left(char op){
 void Number_Classification::evalulate(){
 	stack<string> eval;
 	stack<float> decimal_eval;
+	string o;
     while(!numbers.empty()){
-        string o = numbers.front();
+        o = numbers.front();
 		numbers.pop();
 		if(is_number(o)){
 			eval.push(o);
 			decimal_eval.push(atof(o.c_str()));
 		}
-		else if(is_function(o)){
-			//string numb = eval.top();
-			//eval.pop();
-			//string result = operate(numb, o);
-			//eval.push(result);
-		}
+		/*else if(is_function(o)){
+			
+		}*/
 		else{
-			float t1 = decimal_eval.top();
-			decimal_eval.pop();
-			float t2 = decimal_eval.top();
-			decimal_eval.pop();
-			decimal_eval.push(operate(t2,t1, o[0]));
+			if(decimal_eval.size() > 1){
+				float t1 = decimal_eval.top();
+				decimal_eval.pop();
+				float t2 = decimal_eval.top();
+				decimal_eval.pop();
+				decimal_eval.push(operate(t2,t1, o[0]));
+			}
 			switch(o[0]){
 				case '*':
 					multiply(eval);
 					break;
-				case '/':;
+				case '/':
 					divide(eval);
 					break;
-				case '+':;
+				case '+':
 					add(eval);
 					break;
-				case '-':;
+				case '-':
 					subtract(eval);
 					break;
-				case '^':;
+				/*case 's':
+					eval.push(o);
+					square_root(eval);
+					break;*/
+				case '^':
 					exponent(eval);
 					break;
 			}
     	}
     }
     if(this->frac_float == 1){
-    	cout << "\n" << eval.top() << " - Fractional\n" << endl;
+		cout << "\n" << eval.top() << " - Fractional\n" << endl;
+		prevExpressions.push_back("( "+eval.top()+" )");		
     }
     if(this->frac_float == 0){
     	cout << "\n" << decimal_eval.top() << " - Float Representation\n" << endl;
+    	stringstream ss;
+    	ss << decimal_eval.top();
+    	prevExpressions.push_back("( "+ss.str()+" )");
     }
-    prevExpressions.push_back("( "+eval.top()+" )");
-    while(!eval.empty()){
-    	eval.pop();
-    }
-    while(!decimal_eval.empty()){
-    	decimal_eval.pop();
-    }
-    while(!numbers.empty()){
-    	numbers.pop();
-    }
+    expressions_b.push_back(this->expression);
     expToken.clear();
+}
+void Number_Classification::writeFile(){
+	ofstream myfile;
+	myfile.open("Previous_Expressions.txt");
+	cout << "\n\nSaving evaluated expressions to text file...\n" << endl;
+	for(int i=0;i<prevExpressions.size();i++){
+		myfile << expressions_b.at(i) + " = " + prevExpressions.at(i) + '\n';	
+	}
+	cout << "Saved.\n\n" << endl;
+  	myfile.close();
+}
+string Number_Classification::square_root(stack<string>& stack){
+	Sqrt t(stack.top());
+	stack.pop();
+	stack.push(t.simRoots());
+	cout << t.simRoots() << endl;
+	return t.simRoots();
 }
 string Number_Classification::multiply(stack<string>& stack){
 	Fraction t1(stack.top());
