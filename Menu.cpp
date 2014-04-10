@@ -6,7 +6,7 @@ using namespace std;
 
 bool Menu::printMenu(){
 	cout << "\n\t1.) Compute new expression" << endl;
-	cout << "\t2.) Help" << endl;
+	cout << "\t2.) Help and usability information" << endl;
 	cout << "\t3.) Review previous expression and answers" << endl;
 	cout << "\t4.) Quit" << "\n" << endl;
 	bool choice = this->readChoice();	
@@ -37,7 +37,7 @@ bool Menu::readChoice(){
 		helpMenu:
                 //enter program dialog mode that details how to specify math operations
                 cout<<"Welcome to the help menu!\n"<<endl;
-                cout<<"\t1.)Display input syntax expectations"<<endl;
+                cout<<"\t1.)Display general input syntax expectations and usability information"<<endl;
                 cout<<"\t2.)Sample input"<<endl;
                 cout<<"\t3.)Go back to main menu\n"<<endl;
                 cout<<"Please enter your selection with your keypad"<<endl;
@@ -51,8 +51,13 @@ bool Menu::readChoice(){
                         goto helpMenu;
                 }
                 if(helpInput == '1'){
+                	cout<<"Reminder: !!PLEASE INCLUDE SPACES FOR EVERY INTENDED OPERATIONS!! "<<endl;
+                	cout<<"Reminder: The results from each operation is SAVED,users are allowed to use the 'ans' keyword "<<endl;
+                	cout<<"\t Example: ans + 25"<<endl;
+                	cout<<"===============================================================================================" <<endl;
+                	cout<<"INPUT EXPECTATIONS: "<<endl;
                         cout<<"1.)Power: "<<endl;
-                        cout<<"\t x to the power of y == X^Y"<<endl;
+                        cout<<"\t x to the power of y == x^y"<<endl;
                         cout<<"\t Example: 2^3\n"<<endl;
                         cout<<"2.)Square Roots: "<<endl;
                         cout<<"\t The square root of x == sqrt:x"<<endl ; 
@@ -67,6 +72,7 @@ bool Menu::readChoice(){
                 else if(helpInput == '2'){
                         cout<<"Sample user Input: "<<endl;
                         cout<<"\t  3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3 + log_2:8 \n"<<endl;
+                        cout<<" ans * 5/3 "<<endl;
                 
                 }
                 else if(helpInput == '3'){
