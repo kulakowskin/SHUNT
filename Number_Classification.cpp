@@ -101,6 +101,13 @@ void Number_Classification::replace_all(string& input, string& find, string& rep
 }
 void Number_Classification::exptoToken(char z){
 	shunt:
+	string s;
+    	if (this->expression.find(" ") == std::string::npos) {
+        	if (!is_function(this->expression)) {
+        	 cout<<"Please put a space between every input for system readibilty."<<endl;
+		 }
+    	}
+
 	if(this->expression.find("ans") != std::string::npos && this->prevExpressions.size() == 0){
 		cout << "\nNo Previous Answer(s). Re-enter an expression.\n" << endl;
 		this->enterExpression('y');
